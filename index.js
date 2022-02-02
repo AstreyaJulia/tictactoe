@@ -161,7 +161,7 @@ function newGame() {
             startButton.disabled = false;
             startButton.textContent = "Начать заново";
             fillBoard(boardArray, 1);
-            i = 0;
+            i = 2;
         }
         return i;
     }
@@ -170,14 +170,15 @@ function newGame() {
         let compTurns = [];
         let userTurns = [];
         let randTurn = [];
+
+
         winCombinations.forEach((combination) => {
-            for (let i = 0; i < possibleCombinations.length; i++) {
+            for (let i = 0; i < possibleCombinations.length-3; i++) {
                 if ((array[combination[0]].toString() + array[combination[1]].toString() + array[combination[2]].toString()) === possibleCombinations[i]) {
                     compTurns.push(combination)
                 }
             }
         })
-        console.log('компьютер ' + compTurns)
         if (compTurns.length > 0) {
             // занять свободную ячейку из массива
             compTurns.forEach((combination) => {
@@ -187,8 +188,29 @@ function newGame() {
                     }
                 })
             })
-            console.log('рандомные ходы ' + randTurn)
+            makecompTurn(randTurn);
         } else
+
+        if (compTurns.length === 0) {
+            winCombinations.forEach((combination) => {
+                for (let i = 3; i < userCombinations.length; i++) {
+                    if ((array[combination[0]].toString() + array[combination[1]].toString() + array[combination[2]].toString()) === userCombinations[i]) {
+                        compTurns.push(combination)
+                    }
+                }
+            })
+        }
+        // занять свободную ячейку из массива
+        if (compTurns.length > 0) {
+            compTurns.forEach((combination) => {
+                combination.forEach((item) => {
+                    if (boardArray[item] === 0 && !randTurn.includes(item)) {
+                        randTurn.push(item);
+                    }
+                })
+            })
+            makecompTurn(randTurn);
+        }
             // если нет вариантов
         if (compTurns.length === 0) {
             winCombinations.forEach((combination) => {
@@ -199,23 +221,24 @@ function newGame() {
                 }
             })
         }
-        console.log('ходы пользователя ' + userTurns)
         // занять свободную ячейку из массива
-        userTurns.forEach((combination) => {
-            combination.forEach((item) => {
-                //console.log(boardArray[item].toString() !== 'x')
-                if (boardArray[item] === 0 && !randTurn.includes(item)) {
-                    randTurn.push(item);
-                }
+        if (userTurns.length > 0) {
+            userTurns.forEach((combination) => {
+                combination.forEach((item) => {
+                    if (boardArray[item] === 0 && !randTurn.includes(item)) {
+                        randTurn.push(item);
+                    }
+                })
             })
-        })
-        console.log('рандомные ходы ' + randTurn)
+            makecompTurn(randTurn);
+        }
 
-        // пишем в массив
-        let rand = randTurn[Math.floor(Math.random() * randTurn.length)];
-        console.log(rand)
-        boardArray[rand] = players[currentPlayer].value;
-        fillBoard(boardArray, 0);
+        function makecompTurn(array) {
+            // пишем в массив
+            let rand = array[Math.floor(Math.random() * array.length)];
+            boardArray[rand] = players[currentPlayer].value;
+            fillBoard(boardArray, 0);
+        }
 
         // проверяем выигрыш
         if (!winCheck(boardArray)) {
