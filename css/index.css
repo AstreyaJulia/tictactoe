@@ -30,12 +30,12 @@
 }
 
 .field-o {
-    background: url("checkbox-blank-circle-outline.svg") no-repeat center, rgba(234, 21, 72, 0.1);
+    background: url("../img/circle.svg") no-repeat center, rgba(234, 21, 72, 0.1);
     background-size: 75%;
 }
 
 .field-x {
-    background: url("close.svg") no-repeat center, rgba(0, 183, 149, 0.1);
+    background: url("../img/cross.svg") no-repeat center, rgba(0, 183, 149, 0.1);
     background-size: 75%;
 }
 

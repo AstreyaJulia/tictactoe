@@ -1,25 +1,27 @@
 ﻿"use strict"
-/* Константы */
 
-// Игровое поле, контейнер для кнопок
+/** Игровое поле, контейнер для кнопок
+ * @type {Element} */
 const board = document.querySelector('.board');
 
-// Кнопка "Начать игру"
+/** Кнопка "Начать игру"
+ * @type {Element} */
 const startButton = document.querySelector('.start-button');
 
-// Заголовок с именем текущего игрока / выигравшего игрока
+/** Заголовок с именем текущего игрока / выигравшего игрока
+ * @type {Element} */
 const playerTitle = document.querySelector('.current-player');
 
-// Счет игрока
+/** Счет игрока
+ * @type {Element} */
 const userScore = document.querySelector('.user-score');
 
 // Счет компьютера
 const compScore = document.querySelector('.comp-score');
 
-// Игроки
-// name - имя игрока
-// value - значение поля, пишется в массив, строит класс,
-// который отрисовывает нужную фишку Х или О
+/** Игроки
+ * @type {[{name: string, value: string},{name: string, value: string}]}
+ * name - имя игрока, value - значение поля, пишется в массив, строит класс, который отрисовывает нужную фишку Х или О */
 const players = [
     {
         name: 'Игрок',
@@ -31,17 +33,19 @@ const players = [
     },
 ]
 
-// Массив для игрового поля выглядит так:
-/*
-    let boardArray = [0, 0, 0,
-                      0, 0, 0,
-                      0, 0, 0];
+//
+/** Массив для игрового поля выглядит так:
+ *  let boardArray = [0, 0, 0,
+ *                    0, 0, 0,
+ *                    0, 0, 0];
  */
 
-// Выигрышные комбинации.
-// Если в игровом поле элементы с этими
-// индексами имеют одинаковое значение,
-// то игрок выиграл
+/** Выигрышные комбинации.
+ * Если в игровом поле элементы с этими
+ * индексами имеют одинаковое значение,
+ * то игрок выиграл
+ * @type {number[][]}
+ */
 const winCombinations = [
     [0, 1, 2],
     [3, 4, 5],
@@ -53,7 +57,8 @@ const winCombinations = [
     [2, 4, 6]
 ]
 
-// Массивы для алгоритма ходов компьютера
+/** Массивы для алгоритма ходов компьютера
+ * @type {string[]} */
 const possibleCombinations = [
     'oo0',
     'o0o',
@@ -72,65 +77,74 @@ const userCombinations = [
     '00x'
 ]
 
-// Очки
+/** Очки
+ * @type {number[]} */
 let score = [0, 0];
 
-// Показать очки
+/** Показать очки
+ * @param array
+ * */
 function showScore(array) {
     userScore.textContent = array[0].toString();
     compScore.textContent = array[1].toString();
 }
 
-// Показываем нулевые очки по загрузке страницы
+/** Показываем нулевые очки по загрузке страницы */
 showScore(score);
 
-// Показать ход игрока, принимает число
+/** Показать ход игрока
+ * @param num - число */
 function showCurrentPlayer(num) {
     playerTitle.textContent = "Сейчас ход игрока: " + players[num].name;
 }
 
-// Показать победителя
+/** Показать победителя
+ * @param num
+ */
 function showWinner(num) {
     playerTitle.textContent = "Выиграл " + players[num].name;
 }
 
-// Новая игра
+/** Новая игра */
 function newGame() {
-    // Возвращаем имени пользователя начальный цвет, убираем красный цвет после выигрыша
+    /** Возвращаем имени пользователя начальный цвет, убираем красный цвет после выигрыша */
     playerTitle.classList.remove('red');
 
-    // Даем кнопке название Новая игра, после выигрыша, когда мы ее поменяли на Начать заново
+    /** Даем кнопке название Новая игра, после выигрыша, когда мы ее поменяли на Начать заново
+     * @type {string} */
     startButton.textContent = "Новая игра";
 
-    // Блокируем кнопку, чтобы на нее нельзя было нажать и прервать игру
+    /** Блокируем кнопку, чтобы на нее нельзя было нажать и прервать игру
+     * @type {boolean} */
     startButton.disabled = true;
 
-    // Переменная для хранения индекса текущего игрока
-    // 0 - игрок, 1 - компьютер
+    /** Переменная для хранения индекса текущего игрока
+     * @type {number} 0 - игрок, 1 - компьютер */
     let currentPlayer = 0;
 
-    // Массив игрового поля с начальными пустыми значениями
+    /** Массив игрового поля с начальными пустыми значениями
+     * @type {number[]} */
     let boardArray = [0, 0, 0,
         0, 0, 0,
         0, 0, 0];
 
-    // Заполняем игровое поле значениями из массива boardArray,
-    // на данный момент поле пустое
+    /** Заполняем игровое поле значениями из массива boardArray,
+     *  на данный момент поле пустое */
     fillBoard(boardArray, 0);
 
-    // Выводим на табло имя игрока, который делает ход
+    /** Выводим на табло имя игрока, который делает ход */
     showCurrentPlayer(currentPlayer);
 
     function makeTurn(evt) {
         if (evt.target.classList.contains('field-0')) {
-            // записываем значение нажатой фишки в массив
+            /** записываем значение нажатой фишки в массив */
             const fielditems = board.querySelectorAll('.field');
-            // получаем индекс нажатой фишки
+            /** получаем индекс нажатой фишки */
             let index = Object.keys(fielditems).find(key => fielditems[key] === evt.target);
-            // пишем в массив
+            /** пишем в массив */
             boardArray[index] = players[currentPlayer].value;
             fillBoard(boardArray, 0);
-            // проверяем выигрыш. работает, хоть и ошибка
+            /** проверяем выигрыш. работает, хоть и ошибка */
             if (!winCheck(boardArray)) {
                 fillBoard(boardArray, 1);
                 currentPlayer++;
@@ -155,7 +169,7 @@ function newGame() {
             }
         })
         if (!i && (!(boardArray.includes(0)))) {
-            // проверка наличия ходов - пустых полей, если их нет - ничья
+            /** проверка наличия ходов - пустых полей, если их нет - ничья */
             playerTitle.textContent = "Ничья!";
             playerTitle.classList.add('red');
             startButton.disabled = false;
@@ -173,14 +187,14 @@ function newGame() {
 
 
         winCombinations.forEach((combination) => {
-            for (let i = 0; i < possibleCombinations.length-3; i++) {
+            for (let i = 0; i < possibleCombinations.length - 3; i++) {
                 if ((array[combination[0]].toString() + array[combination[1]].toString() + array[combination[2]].toString()) === possibleCombinations[i]) {
                     compTurns.push(combination)
                 }
             }
         })
         if (compTurns.length > 0) {
-            // занять свободную ячейку из массива
+            /** занять свободную ячейку из массива */
             compTurns.forEach((combination) => {
                 combination.forEach((item) => {
                     if (boardArray[item] === 0 && !randTurn.includes(item)) {
@@ -189,9 +203,7 @@ function newGame() {
                 })
             })
             makecompTurn(randTurn);
-        } else
-
-        if (compTurns.length === 0) {
+        } else if (compTurns.length === 0) {
             winCombinations.forEach((combination) => {
                 for (let i = 3; i < userCombinations.length; i++) {
                     if ((array[combination[0]].toString() + array[combination[1]].toString() + array[combination[2]].toString()) === userCombinations[i]) {
@@ -200,7 +212,7 @@ function newGame() {
                 }
             })
         }
-        // занять свободную ячейку из массива
+        /** занять свободную ячейку из массива */
         if (compTurns.length > 0) {
             compTurns.forEach((combination) => {
                 combination.forEach((item) => {
@@ -211,7 +223,7 @@ function newGame() {
             })
             makecompTurn(randTurn);
         }
-            // если нет вариантов
+        /** если нет вариантов */
         if (compTurns.length === 0) {
             winCombinations.forEach((combination) => {
                 for (let i = 0; i < userCombinations.length; i++) {
@@ -221,7 +233,7 @@ function newGame() {
                 }
             })
         }
-        // занять свободную ячейку из массива
+        /** занять свободную ячейку из массива */
         if (userTurns.length > 0) {
             userTurns.forEach((combination) => {
                 combination.forEach((item) => {
@@ -234,13 +246,13 @@ function newGame() {
         }
 
         function makecompTurn(array) {
-            // пишем в массив
+            /** пишем в массив */
             let rand = array[Math.floor(Math.random() * array.length)];
             boardArray[rand] = players[currentPlayer].value;
             fillBoard(boardArray, 0);
         }
 
-        // проверяем выигрыш
+        /** проверяем выигрыш */
         if (!winCheck(boardArray)) {
             currentPlayer--;
             showCurrentPlayer(currentPlayer);
@@ -269,8 +281,7 @@ function newGame() {
     }
 }
 
-
-// просто отрисовка пустого поля при загрузке
+/** просто отрисовка пустого поля при загрузке */
 document.addEventListener('DOMContentLoaded', function () {
     let boardArray = [0, 0, 0, 0, 0, 0, 0, 0, 0];
     boardArray.forEach(function (item) {
