@@ -4,7 +4,7 @@
 
 Классическая логическая игра на поле размером 3х3 для 2-х игроков (с слабеньким ИИ).
 
-[Демо](https://astreyajulia.github.io/tictactoe/)
+[Страница проекта на GitHub Pages](https://astreyajulia.github.io/tictactoe/)
 
 ## Использовано
 - HTML
