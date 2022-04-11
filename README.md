@@ -2,4 +2,4 @@
 
 Классическая логическая игра на поле размером 3х3 для 2-х игроков (без ИИ). Крестики-нолики
 
-[https://astreyajulia.github.io/tictactoe/](Д)
+[Демо](https://astreyajulia.github.io/tictactoe/)
